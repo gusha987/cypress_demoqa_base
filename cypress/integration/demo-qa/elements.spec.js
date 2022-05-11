@@ -4,6 +4,7 @@ import RadioButtonsPage from "../../pageObjects/RadioButtonsPage";
 import WebTablesPage from "../../pageObjects/WebTablesPage";
 import ButtonsPage from "../../pageObjects/ButtonsPage";
 import LinksPage from "../../pageObjects/LinksPage";
+import SelectablePage from "../../pageObjects/SelectablePage";
 
 context("Elements Page", () => {
     context("Text box scenarios", () => {
@@ -180,10 +181,76 @@ context("Elements Page", () => {
             LinksPage.visit();
         });
 
-        it.only("API stuff", () => {
+        it("API stuff", () => {
             //cy.intercept("GET", "created", { statusCode: 400 });
             LinksPage.createdLink.click();
             LinksPage.linkResponse.should('contain', '201');
         });
     });
+
+    context("Links scenarios", () => {
+        beforeEach(() => {
+            SelectablePage.visit();
+        });
+
+        it("Select click elements", () => {
+            // Noklikot uz laukiem “Cras justo odio” un “Morbi leo risus”
+            // Pārbaudīt vai ir aktīvi lauki
+            SelectablePage.fieldOne.click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+            SelectablePage.fieldThree.click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+            // Pārbauda vai pārējie lauki ir neaktīvi
+            SelectablePage.fieldTwo
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+            SelectablePage.fieldFour
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+        });
+    });
+
+    context("Grid page scenarios", () => {
+        beforeEach(() => {
+            SelectablePage.visit();
+        });
+
+        it.only("Select click elements", () => {
+            // Atver grid daļu
+            SelectablePage.gridButton.click();
+            // Click fields - Two, Four, Six, Eight
+            SelectablePage.fieldButton.contains('Two').click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+            SelectablePage.fieldButton.contains('Four').click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+            SelectablePage.fieldButton.contains('Six').click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+            SelectablePage.fieldButton.contains('Eight').click()
+                .invoke('attr', 'class')
+                .should('contain', 'active');
+
+            // Check One, Three, Five, Seven, Nine are inactive
+            SelectablePage.fieldButton.contains('One')
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+            SelectablePage.fieldButton.contains('Three')
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+            SelectablePage.fieldButton.contains('Five')
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+            SelectablePage.fieldButton.contains('Seven')
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+            SelectablePage.fieldButton.contains('Nine')
+                .invoke('attr', 'class')
+                .should('not.contain', 'active');
+        });
+    });
+
 });
